@@ -43,7 +43,13 @@ class SketchPad {
                 [[100,50],[110,60]]          // stroke 2
             ]
         */
-        this.paths = [];
+       this.reset();
+        this.#addEventListeners();
+    }
+
+
+    reset(){
+         this.paths = [];
 
         // Tracks whether mouse button is currently pressed
         this.isDrawing = false;
@@ -51,9 +57,7 @@ class SketchPad {
         // Register mouse event handlers
 
         this.#redraw();
-        this.#addEventListeners();
     }
-
     #addEventListeners() {
 
         // Start a new stroke when mouse button is pressed
@@ -90,21 +94,33 @@ class SketchPad {
         };
 
         // Stop drawing when mouse button is released
-        this.canvas.onmouseup = () => {
+        document.onmouseup = () => {
             this.isDrawing = false;
         };
-        this.canvas.ontouchstart = (evt) =>{
-            const loc = evt.touches[0];
-            this.canvas.onmousedown(loc);
+        this.canvas.ontouchstart = (evt) => {
+            evt.preventDefault();
+            const touch = evt.touches[0];
+            if (!touch) return;
+
+            this.canvas.onmousedown({
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
         };
 
         this.canvas.ontouchmove = (evt) => {
-            const loc = evt.touches[0];
-            this.canvas.onmousemove(loc);
-        }
+            evt.preventDefault();
+            const touch = evt.touches[0];
+            if (!touch) return;
 
-        this.canvas.ontouchend = ()=> {
-            this.canvas.onmouseup();
+            this.canvas.onmousemove({
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+        };
+
+        document.ontouchend = () => {
+            document.onmouseup();
         };
 
         this.undoBtn.onclick = ()=>{
