@@ -37,10 +37,6 @@ fileNames.forEach(fn => {
             JSON.stringify(paths)
         );
         
-        fs.writeFileSync(
-            constants.SAMPLES_JS,
-            "const samples="+JSON.stringify(paths)+";"
-        );
 
         generateImageFile(
             constants.IMG_DIR+"/"+id+".png",
@@ -54,7 +50,7 @@ fileNames.forEach(fn => {
 
 // Write the aggregated sample metadata to samples.json
 fs.writeFileSync(constants.SAMPLES, JSON.stringify(samples));
-
+fs.writeFileSync(constants.SAMPLES_JS, "const samples="+ JSON.stringify(samples)+";");
 
 function generateImageFile(outFile,paths){
     ctx.clearRect(0,0,
