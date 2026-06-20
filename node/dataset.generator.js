@@ -1,4 +1,8 @@
 const draw = require('../common/draw.js');
+const constants = require('../common/constants.js');
+const utils = require('../common/utils.js');
+
+
 const {createCanvas} = require('canvas');
 const canvas = createCanvas(400,400);
 const ctx =canvas.getContext('2d');
@@ -6,15 +10,7 @@ const ctx =canvas.getContext('2d');
 const path = require('path');
 const fs = require('fs');
 
-const constants = {};
 
-// Base data directory relative to this script
-constants.DATA_DIR = path.join(__dirname, '..', 'data');
-constants.RAW_DIR = path.join(constants.DATA_DIR, 'raw');
-constants.DATASET_DIR = path.join(constants.DATA_DIR, 'dataset');
-constants.JSON_DIR = path.join(constants.DATASET_DIR, 'json');
-constants.IMG_DIR = path.join(constants.DATASET_DIR, 'img');
-constants.SAMPLES = path.join(constants.DATASET_DIR, 'samples.json');
 
 // Read all raw JSON files from the raw data directory
 const fileNames = fs.readdirSync(constants.RAW_DIR);
@@ -40,11 +36,18 @@ fileNames.forEach(fn => {
             constants.JSON_DIR+"/"+id+".json",
             JSON.stringify(paths)
         );
+        
+        fs.writeFileSync(
+            constants.SAMPLES_JS,
+            "const samples="+JSON.stringify(paths)+";"
+        );
 
         generateImageFile(
             constants.IMG_DIR+"/"+id+".png",
             paths
         );
+
+        utils.printProgress(id,fileNames.length*8);
         id++;
     }
 });
