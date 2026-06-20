@@ -1,0 +1,5 @@
+data/raw/
+data/dataset/json/*
+!data/dataset/json/.gitkeep
+data/dataset/img/*
+node/node_modules
