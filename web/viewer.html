@@ -11,10 +11,13 @@
     <div id="container"></div>
     <script  src = "../common/constants.js"></script>
     <script  src = "../common/utils.js"></script>
-    <script  src = "../common/js_objects/samples.js"></script>
+    <script  src = "../common/js_objects/features.js"></script>
+    <!-- <script  src = "../common/js_objects/samples.js"></script> -->
     <script src="js/display.js"></script>
 
+
     <script>
+        const{samples,featureNames}= features;
         const groups = utils.groupBy(samples, "user_id");
         for(let user_id in groups){
             const samples = groups[user_id];
