@@ -4,6 +4,18 @@ utils.flaggedUsers = [1663855426831,1663858221250,1663858276975,1663859212298,16
 1666997859230,1666998028989,1674833893482,1674890940118,1675056399345
 ,1675613158094,1676257394767,1676348574010,1676640449982,1678207465106,1679403934444,1681750351703,1681777101369,1681837899558,1682255271235,
 ]
+
+
+utils.styles ={
+    car:    {color:'gray',text:'🚗'},
+    fish:   {color:'red', text:'🐟'},
+    house:  {color:'yellow',text:'🏠'},
+    tree:   {color:'green', text:'🌳'},
+    bicycle:{color: 'cyan', text:'🚲'},
+    guitar: {color: 'blue', text:'🎸'},
+    pencil: {color: 'magenta',text:'✏️'},
+    clock:  {color:'lightgray',text:'⏰'}
+}
 utils.formatPercent= (n)=>{
     return (n*100).toFixed(2)+"%";
 }

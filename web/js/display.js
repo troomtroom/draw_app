@@ -20,6 +20,7 @@ function createRow(container,userName,samples,user_id){
         // add whitebg to these images
         const sampleContainer = document.createElement("div");
         sampleContainer.id="sample_"+id;
+        sampleContainer.onclick= ()=> handleClick(sample,false);
         sampleContainer.classList.add("sampleContainer");
 
         const sampleLabel = document.createElement("div");
@@ -35,4 +36,34 @@ function createRow(container,userName,samples,user_id){
         sampleContainer.appendChild(img);
         row.appendChild(sampleContainer);
     }
+}
+
+function handleClick(sample,doScroll=true){
+    // fix emphasize still remaining
+    if(sample==null){
+        [...document.querySelectorAll('.emphasize')].
+            forEach((e)=>e.classList.remove('emphasize'));
+        return;
+    }
+    const el = document.getElementById("sample_"+sample.id);
+    
+    if(el.classList.contains("emphasize")){
+    el.classList.remove("emphasize");
+    chart.selectSample(null);
+    return;
+    }
+
+    [...document.querySelectorAll('.emphasize')].
+            forEach((e)=>e.classList.remove('emphasize'));
+        
+
+    el.classList.add("emphasize");
+    if(doScroll){
+        el.scrollIntoView({
+            behavior: 'auto',
+            block:'center'
+        });
+    }
+
+    chart.selectSample(sample);
 }
