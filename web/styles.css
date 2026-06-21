@@ -54,3 +54,6 @@ button:disabled:hover{
     border-radius: 10%;
     margin: 1px;
 }
+.blur{
+    filter:blur(5px);
+}
