@@ -28,7 +28,7 @@
     <script src="js/sketchPad.js"></script>
     <script>
         let index=0;
-        const labels = ["car","fish","house","tree","bicycle","guitar","pencil","click"]
+        const labels = ["car","fish","house","tree","bicycle","guitar","pencil","clock"]
         const data = {
             user:null,
             session: new Date().getTime(),
@@ -38,7 +38,7 @@
         const sketchPad = new SketchPad(document.getElementById('sketchPadContainer'));
 
         function start(){
-            if(user.value==""){
+            if(user.value.trim()==""){
                 alert("Please type your name first!");
                 return;
             }
@@ -52,9 +52,15 @@
         }
 
         function next(){
+
+        if(sketchPad.paths.length === 0){
+            alert("Draw something first!");
+            return;
+        }
+
             
             const label = labels[index];
-            data.drawings['label']=sketchPad.paths;
+            data.drawings[label] = sketchPad.paths;
             sketchPad.reset();
             index++;
             if (index<labels.length) {
