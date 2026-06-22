@@ -1,5 +1,5 @@
 class SketchPad {
-    constructor(container, size = 400) {
+    constructor(container, onUpdate=null, size = 400) {
 
         // Create a canvas element dynamically
         this.canvas = document.createElement("canvas");
@@ -43,7 +43,9 @@ class SketchPad {
                 [[100,50],[110,60]]          // stroke 2
             ]
         */
-       this.reset();
+
+        this.onUpdate= onUpdate;
+        this.reset();
         this.#addEventListeners();
     }
 
@@ -148,8 +150,16 @@ class SketchPad {
         else{
             this.undoBtn.disabled=true;
         }
+
+        this.triggerUpdate();
     }
 
+
+    triggerUpdate(){
+        if(this.onUpdate!=null){
+            this.onUpdate(this.paths);
+        }
+    }
     // Convert browser mouse coordinates
     // into canvas-relative coordinates
     #getMouse = (evt) => {
