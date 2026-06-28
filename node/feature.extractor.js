@@ -17,13 +17,11 @@ for(const sample of samples){
 
     );
 
-    sample.point=[
-        featureFunctions.getPathCount(paths),
-        featureFunctions.getPointCount(paths)
-    ];
+const featureFns = featureFunctions.inUse.map(feature => feature.function);
+sample.point = featureFns.map(fn => fn(paths));
 };
 
-const featureNames = ["Path Count", "Point Count"];
+const featureNames = featureFunctions.inUse.map(feature => feature.name || feature.label || 'Unnamed Feature');
 
 fs.writeFileSync(
     constants.FEATURES,

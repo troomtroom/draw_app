@@ -37,14 +37,16 @@ class Chart{
       this.defaultDataBounds=this.#getDataBounds();
 
       this.dyanamicPoint=null;
+      this.nearestSample=null;
 
       this.#draw();
 
       this.#addEventListeners();
    }
 
-   showDynamicPoint(point){
-      this.dynamicPoint=point;
+   showDynamicPoint(point,label, nearestSample){
+      this.dynamicPoint={point,label};
+      this.nearestSample=nearestSample;
       this.#draw();
    }
 
@@ -219,15 +221,110 @@ class Chart{
       const maxX=Math.max(...x);
       const minY=Math.min(...y);
       const maxY=Math.max(...y);
+      const deltaX=maxX-minX;
+      const deltaY=maxY-minY;
+      const maxDelta=Math.max(deltaX,deltaY);
       const bounds={
          left:minX,
-         right:maxX,
-         top:maxY,
+         right: maxX,//minX+maxDelta,
+         top:maxY,//minY+maxDelta,
          bottom:minY
       };
       return bounds;
    }
 
+ /* #getOrientedBounds() {
+   const { samples } = this;
+
+   const points = samples.map(s => s.point);
+   const n = points.length;
+
+   if (n === 0) {
+      return {
+         angle: 0,
+         centerX: 0,
+         centerY: 0,
+         minX: 0,
+         maxX: 0,
+         minY: 0,
+         maxY: 0
+      };
+   }
+
+   if (n === 1) {
+      const [x, y] = points[0];
+      return {
+         angle: 0,
+         centerX: x,
+         centerY: y,
+         minX: 0,
+         maxX: 0,
+         minY: 0,
+         maxY: 0
+      };
+   }
+
+   // centroid
+   let centerX = 0;
+   let centerY = 0;
+
+   for (const [x, y] of points) {
+      centerX += x;
+      centerY += y;
+   }
+
+   centerX /= n;
+   centerY /= n;
+
+   // covariance matrix
+   let xx = 0;
+   let xy = 0;
+   let yy = 0;
+
+   for (const [x, y] of points) {
+      const dx = x - centerX;
+      const dy = y - centerY;
+
+      xx += dx * dx;
+      xy += dx * dy;
+      yy += dy * dy;
+   }
+
+   // PCA angle
+   const angle = 0.5 * Math.atan2(2 * xy, xx - yy);
+
+   const c = Math.cos(-angle);
+   const s = Math.sin(-angle);
+
+   let minX = Infinity;
+   let maxX = -Infinity;
+   let minY = Infinity;
+   let maxY = -Infinity;
+
+   // project points into PCA frame
+   for (const [x, y] of points) {
+      const dx = x - centerX;
+      const dy = y - centerY;
+
+      const rx = dx * c - dy * s;
+      const ry = dx * s + dy * c;
+
+      minX = Math.min(minX, rx);
+      maxX = Math.max(maxX, rx);
+      minY = Math.min(minY, ry);
+      maxY = Math.max(maxY, ry);
+   }
+
+   return {
+      angle,
+      centerX,
+      centerY,
+      minX,
+      maxX,
+      minY,
+      maxY
+   };
+}*/
    #draw(){
       const {ctx,canvas}=this;
       ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -249,13 +346,22 @@ class Chart{
       }
 
       if(this.dynamicPoint){
+         const {point,label}=this.dynamicPoint;
          const pixelLoc=math.remapPoint(
             this.dataBounds,
             this.pixelBounds,
-            this.dynamicPoint
+            point
          );
          graphics.drawPoint(ctx,pixelLoc,"rgba(255,255,255,0.6)",10000000000);
-         graphics.drawPoint(ctx,pixelLoc,"black");
+         ctx.beginPath();
+         ctx.moveTo(...pixelLoc);
+         ctx.lineTo(...math.remapPoint(
+            this.dataBounds,
+            this.pixelBounds,
+            this.nearestSample.point
+         ));
+         ctx.stroke();
+         graphics.drawImage(ctx,this.styles[label].image, pixelLoc);
       }
 
       this.#drawAxes();
