@@ -95,3 +95,10 @@ button:disabled:hover{
     text-align: center;
     margin:10px;
 }
+
+
+#predictedLabelContainer{
+    color:white;
+    font-size: 30px;
+    position: relative;
+}
