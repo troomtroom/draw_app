@@ -68,6 +68,81 @@ utils.getNearest=(loc,points)=>{
    return nearestIndex;
 }
 
+utils.inverseLerp=(min,max,value)=>{
+    return (value-min)/(max-min);
+}
+
+
+utils.normalizePoints=(points,minMax)=>{
+    let min,max;
+    const dims = points[0].length;
+    
+    if(minMax){
+        min = minMax.min;
+        max = minMax.max;
+    }
+    else{
+        min= [...points[0]];
+        max= [...points[0]];
+
+        for(let i=1;i<points.length;i++){
+            for(let j=0;j<dims;j++){
+                min[j]=Math.min(min[j],points[i][j]);
+                max[j]=Math.max(max[j],points[i][j]);
+            }
+        }
+    }
+    for(let i=0;i<points.length;i++){
+        for(let j=0;j<dims;j++){
+            points[i][j]=utils.inverseLerp(min[j],max[j],points[i][j]);
+        }
+    }
+
+    return {min,max};
+}
+
+utils.standardizePoints=(points,meanStd)=>{
+    let mean,std;
+    const dims = points[0].length;
+
+    if(meanStd){
+        mean = meanStd.mean;
+        std = meanStd.std;
+    }
+    else{
+        mean = new Array(dims).fill(0);
+        std = new Array(dims).fill(0);
+
+        for(let i=0;i<points.length;i++){
+            for(let j=0;j<dims;j++){
+                mean[j]+=points[i][j];
+            }
+        }
+
+        for(let j=0;j<dims;j++){
+            mean[j]/=points.length;
+        }
+
+        for(let i=0;i<points.length;i++){
+            for(let j=0;j<dims;j++){
+                std[j]+=(points[i][j]-mean[j])**2;
+            }
+        }
+
+        for(let j=0;j<dims;j++){
+            std[j]=Math.sqrt(std[j]/points.length);
+        }
+    }
+
+    for(let i=0;i<points.length;i++){
+        for(let j=0;j<dims;j++){
+            points[i][j]=std[j]===0 ? 0 : (points[i][j]-mean[j])/std[j];
+        }
+    }
+
+    return {mean,std};
+}
+
 
 if(typeof module!=='undefined'){
     module.exports=utils;

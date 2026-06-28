@@ -1,6 +1,6 @@
 const constants = require('../common/constants.js');
 const featureFunctions = require('../common/featureFunctions.js');
-
+const utils = require('../common/utils.js');
 const fs = require('fs');
 
 console.log("Extracting features from samples...");
@@ -21,6 +21,7 @@ const featureFns = featureFunctions.inUse.map(feature => feature.function);
 sample.point = featureFns.map(fn => fn(paths));
 };
 
+const meanStd = utils.standardizePoints(samples.map(s=>s.point));
 const featureNames = featureFunctions.inUse.map(feature => feature.name || feature.label || 'Unnamed Feature');
 
 fs.writeFileSync(
@@ -42,5 +43,6 @@ fs.writeFileSync(
     ${JSON.stringify({featureNames,samples})}
     ;`
 );
-    
+
+fs.writeFileSync(constants.FEATURES_MEAN_STD_JS,`const featuresMeanStd = ${JSON.stringify(meanStd)};`);
 console.log("Features extracted and saved to "+constants.FEATURES);

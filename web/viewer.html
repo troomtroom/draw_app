@@ -22,6 +22,7 @@
     <script  src = "../common/featureFunctions.js"></script>
 
     <script  src = "../common/js_objects/features.js"></script>
+    <script  src = "../common/js_objects/meanStd.js"></script>
 
     <!-- <script  src = "../common/js_objects/samples.js"></script> -->
     <script src="js/display.js"></script>
@@ -63,6 +64,7 @@
             const featureFns = featureFunctions.inUse.map(feature => feature.function);
             point = featureFns.map(fn => fn(paths));
             
+            utils.standardizePoints([point],featuresMeanStd);
             const {label, nearestSample}= classify(point);
             // console.log(label);       
             
