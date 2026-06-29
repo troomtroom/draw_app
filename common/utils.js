@@ -52,18 +52,14 @@ utils.distance=(p1,p2)=>{
    );
 }
 
-utils.getNearest=(loc,points,k=1)=>{
-   const obj = points.map((value,index)=>{
-    return {index,value};
-   });
-
-   const sorted = obj.sort((a,b)=>{
-    return utils.distance(loc,a.value)-utils.distance(loc,b.value);
-   });
-   
-   const indices = sorted.slice(0,k).map(o=>o.index);
-   return indices.slice(0,k);
-
+utils.getNearest = (loc, points, k = 1) => {
+    return points
+        .map((point, index) => ({
+            index,
+            distance: utils.distance(loc, point)
+        }))
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, k);
 }
 
 utils.inverseLerp=(min,max,value)=>{
@@ -139,6 +135,58 @@ utils.standardizePoints=(points,meanStd)=>{
     }
 
     return {mean,std};
+}
+
+
+// probability util
+
+utils.getCounts=(items)=>{
+    const counts = {};
+
+    for(const item of items){
+        counts[item] = (counts[item] || 0) + 1;
+    }
+
+    return counts;
+}
+
+utils.getMaxEntry=(obj)=>{
+    const max = Math.max(...Object.values(obj));
+    const key = Object.keys(obj).find(k => obj[k] === max);
+
+    return {key, value: max};
+}
+
+utils.getVoteProbability=(items)=>{
+    const counts = utils.getCounts(items);
+    const max = utils.getMaxEntry(counts);
+
+    return {
+        label: max.key,
+        probability: max.value / items.length,
+        counts
+    };
+}
+
+utils.getWeightedProbability=(items, weights)=>{
+    const totals = {};
+    let totalWeight = 0;
+
+    for(let i=0;i<items.length;i++){
+        const item = items[i];
+        const weight = weights[i];
+
+        totals[item] = (totals[item] || 0) + weight;
+        totalWeight += weight;
+    }
+
+    const max = utils.getMaxEntry(totals);
+
+    return {
+        label: max.key,
+        probability: max.value / totalWeight,
+        weights: totals
+    };
 }
 
 

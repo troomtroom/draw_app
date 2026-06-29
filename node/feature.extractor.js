@@ -24,6 +24,7 @@ sample.point = featureFns.map(fn => fn(paths));
 const meanStd = utils.standardizePoints(samples.map(s=>s.point));
 const featureNames = featureFunctions.inUse.map(feature => feature.name || feature.label || 'Unnamed Feature');
 
+
 fs.writeFileSync(
     constants.FEATURES,
     JSON.stringify({

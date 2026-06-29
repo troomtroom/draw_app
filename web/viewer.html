@@ -65,28 +65,32 @@
             point = featureFns.map(fn => fn(paths));
             
             utils.standardizePoints([point],featuresMeanStd);
-            const {label, nearestSamples}= classify(point);
+            const {label, probability,nearestSamples}= classify(point);
             // console.log(label);       
             
-            predictedLabelContainer.innerHTML = "Is is a "+ label +"?";
+            predictedLabelContainer.innerHTML = "Is is a "+ label +"?" +  utils.formatPercent(probability);
             chart.showDynamicPoint(point, label, nearestSamples);
         }
 
 
-        function classify(point){
+        function classify(point, k =10){
+            
             const samplePoints = samples.map(s=>s.point);
-            const indices = utils.getNearest (point,samplePoints, 10);
-            const nearestSamples = indices.map(i => samples[i]);
+            const indices = utils.getNearest (point,samplePoints, k);
+            const nearestSamples = indices.map(i => samples[i.index]);
             const labels = nearestSamples.map(s => s.label);
-            const counts = {};
+            
+            const epsilon = 1e-6;
 
-            for(const label of labels){
-                counts[label] = (counts[label] || 0) + 1;
-            }
+            const weights = nearestSamples.map(s=> {
+                const distance = utils.distance(point,s.point);
+                return 1/(distance+epsilon);
+            });
 
-            const max = Math.max(...Object.values(counts));
-            const label = labels.find(l => counts[l] === max);
-            return {label, nearestSamples};
+            const {label, probability} = utils.getWeightedProbability(labels,weights);
+            // const {label,probability} = utils.getVoteProbability(labels);
+
+            return {label, probability, nearestSamples};
         }
     </script>
 
