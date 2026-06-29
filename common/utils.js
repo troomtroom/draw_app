@@ -52,20 +52,18 @@ utils.distance=(p1,p2)=>{
    );
 }
 
-utils.getNearest=(loc,points)=>{
-   let minDist=Number.MAX_SAFE_INTEGER;
-   let nearestIndex=0;
+utils.getNearest=(loc,points,k=1)=>{
+   const obj = points.map((value,index)=>{
+    return {index,value};
+   });
 
-   for(let i=0;i<points.length;i++){
-      const point=points[i];
-      const d=math.distance(loc,point);
+   const sorted = obj.sort((a,b)=>{
+    return utils.distance(loc,a.value)-utils.distance(loc,b.value);
+   });
+   
+   const indices = sorted.slice(0,k).map(o=>o.index);
+   return indices.slice(0,k);
 
-      if(d<minDist){
-         minDist=d;
-         nearestIndex=i;
-      }
-   }
-   return nearestIndex;
 }
 
 utils.inverseLerp=(min,max,value)=>{

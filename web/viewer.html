@@ -65,19 +65,28 @@
             point = featureFns.map(fn => fn(paths));
             
             utils.standardizePoints([point],featuresMeanStd);
-            const {label, nearestSample}= classify(point);
+            const {label, nearestSamples}= classify(point);
             // console.log(label);       
             
             predictedLabelContainer.innerHTML = "Is is a "+ label +"?";
-            chart.showDynamicPoint(point, label, nearestSample);
+            chart.showDynamicPoint(point, label, nearestSamples);
         }
 
 
         function classify(point){
             const samplePoints = samples.map(s=>s.point);
-            const index = utils.getNearest(point,samplePoints);
-            const nearestSample = samples[index];
-            return {label: nearestSample.label, nearestSample};
+            const indices = utils.getNearest (point,samplePoints, 10);
+            const nearestSamples = indices.map(i => samples[i]);
+            const labels = nearestSamples.map(s => s.label);
+            const counts = {};
+
+            for(const label of labels){
+                counts[label] = (counts[label] || 0) + 1;
+            }
+
+            const max = Math.max(...Object.values(counts));
+            const label = labels.find(l => counts[l] === max);
+            return {label, nearestSamples};
         }
     </script>
 
