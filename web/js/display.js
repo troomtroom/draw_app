@@ -15,7 +15,7 @@ function createRow(container,userName,samples,user_id){
     row.appendChild(rowLabel);
 
     for(let sample of samples){
-        const {id,label,user_id} = sample;
+        const {id,label,user_id,correct} = sample;
 
         // add whitebg to these images
         const sampleContainer = document.createElement("div");
@@ -23,6 +23,9 @@ function createRow(container,userName,samples,user_id){
         sampleContainer.onclick= ()=> handleClick(sample,false);
         sampleContainer.classList.add("sampleContainer");
 
+        if(correct){
+            sampleContainer.style.backgroundColor="lightgreen";
+        }
         const sampleLabel = document.createElement("div");
         sampleLabel.innerHTML=label;
         sampleContainer.appendChild(sampleLabel);

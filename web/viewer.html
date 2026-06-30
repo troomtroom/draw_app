@@ -14,6 +14,7 @@
     <div id="chartContainer"></div>
     <div id="controlPanel">
         <button id="toggleInput" onClick="toggleInput()">Toggle Input</button>
+        <div id="statistics"></div>
     </div>
     <div id="container"></div>
     <script  src = "../common/constants.js"></script>
@@ -22,8 +23,11 @@
     <script  src = "../common/featureFunctions.js"></script>
 
     <script  src = "../common/js_objects/features.js"></script>
-    <script  src = "../common/js_objects/meanStd.js"></script>
+    <script  src = "../common/js_objects/testing.js"></script>
+    <script  src = "../common/js_objects/training.js"></script>
 
+    <script  src = "../common/js_objects/meanStd.js"></script>
+    <script src = "../common/js_objects/minMax.js"></script>
     <!-- <script  src = "../common/js_objects/samples.js"></script> -->
     <script src="js/display.js"></script>
     <script src="js/sketchPad.js"></script>
@@ -32,12 +36,44 @@
     <script src="./chart/math.js"></script>
     <script>
         const{samples,featureNames}= features;
-        const groups = utils.groupBy(samples, "user_id");
-        for(let user_id in groups){
-            const samples = groups[user_id];
+        const trainingSamples = training.samples;
+        const testingSamples = testing.samples;
+
+        let correctCount = 0;
+        let totalCount = 0;
+        for(const testSample of testingSamples){
+            testSample.truth = testSample.label;
+            testSample.label="?";
+            const {label} = classify(testSample.point);
+            testSample.label = label;
+            testSample.correct = testSample.label ==testSample.truth;
+
+            totalCount++;
+
+            correctCount+=testSample.correct?1:0;
+        }
+
+        statistics.innerHTML = "<b>ACCURACY</b><br>" +
+            correctCount+ "/" + totalCount + " ("+
+            utils.formatPercent(correctCount/totalCount)+")";
+        const trainingGroups = utils.groupBy(trainingSamples, "user_id");
+        for(let user_id in trainingGroups){
+            const samples = trainingGroups[user_id];
             const userName = samples[0].user_name;
             createRow(container,userName,samples,user_id);
         }
+
+        const subtitle = document.createElement("h2");
+        subtitle.innerHTML="TESTING DATA";
+        container.appendChild(subtitle);
+
+        const testingGroups = utils.groupBy(testingSamples, "user_id");
+        for(let user_id in testingGroups){
+            const samples = testingGroups[user_id];
+            const userName = samples[0].user_name;
+            createRow(container,userName,samples,user_id);
+        }
+
 
         const options={
             size: 300,
@@ -50,7 +86,7 @@
 
         const chart = new Chart(
             chartContainer,
-            samples,
+            trainingSamples,
             options,
             handleClick
         );
@@ -59,12 +95,12 @@
             new SketchPad(inputContainer,onDrawingUpdate);
         sketchPad.canvas.style.cssText+= 
            "outline:10000px solid rgba(0,0,0,0.7);";
-        
+            toggleInput();
         function onDrawingUpdate(paths){
             const featureFns = featureFunctions.inUse.map(feature => feature.function);
             point = featureFns.map(fn => fn(paths));
             
-            utils.standardizePoints([point],featuresMeanStd);
+            utils.normalizePoints([point],featuresMinMax);
             const {label, probability,nearestSamples}= classify(point);
             // console.log(label);       
             
@@ -75,9 +111,9 @@
 
         function classify(point, k =10){
             
-            const samplePoints = samples.map(s=>s.point);
+            const samplePoints = trainingSamples.map(s=>s.point);
             const indices = utils.getNearest (point,samplePoints, k);
-            const nearestSamples = indices.map(i => samples[i.index]);
+            const nearestSamples = indices.map(i => trainingSamples[i.index]);
             const labels = nearestSamples.map(s => s.label);
             
             const epsilon = 1e-6;
