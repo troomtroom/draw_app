@@ -1,1 +1,1 @@
-const featuresMinMax = {"min":[0,0],"max":[968,480]};
+const featuresMinMax = {"min":[15,22],"max":[515,451]};
