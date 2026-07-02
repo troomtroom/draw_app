@@ -78,12 +78,14 @@
 
 
         const options={
-            size: 300,
+            size: 500,
             axesLabels: featureNames,
             styles: utils.styles,
             transparency: 0.8,
-            icon: "image"
+            icon: "image",
+            bg: new Image()
         };
+        options.bg.src = constants.DESCISION_BOUNDARY_PLOT;
         graphics.generateImages(utils.styles)
 
         const chart = new Chart(

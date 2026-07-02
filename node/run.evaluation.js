@@ -34,3 +34,40 @@ for(const sample of testingSamples){
 }  
 
 console.log(`Accuracy: ${correctCount}/${totalCount} = ${correctCount/totalCount*100}%`);
+
+
+// Descision Boundary Plots
+
+console.log("Generating Decision Boundary Plots..");
+
+// we'll need to use a canvas
+
+const {createCanvas} = require('canvas');
+
+const canvas = createCanvas(5000,5000);
+
+const ctx = canvas.getContext('2d');
+
+// It'll be a pixel based plot, we take each individual pixel and treat it as a feature
+// then well classify it and color it based on the predicted label
+
+
+// looping pixel by , generating a point for each pixel and classifying it
+for(let x=0;x<canvas.width;x++){
+    for(let y=0;y<canvas.height;y++){
+        const point = [
+            x/canvas.width,
+            1-y/canvas.height  // y axis is flipped in canvas   
+        ];
+        const {label} = kNN.predict(point);
+        const color = utils.styles[label]?.color;
+        ctx.fillStyle = color;
+        ctx.fillRect(x,y,1,1);
+    }
+}
+
+
+const buffer = canvas.toBuffer('image/png');
+fs.writeFileSync(constants.DESCISION_BOUNDARY_PLOT, buffer);
+
+console.log("DONE! Decision Boundary Plot saved to "+constants.DESCISION_BOUNDARY_PLOT);

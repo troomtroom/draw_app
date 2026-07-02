@@ -17,6 +17,8 @@ constants.TRAINING_JS=constants.JS_OBJECTS+"/training.js";
 constants.TESTING_JS=constants.JS_OBJECTS+"/testing.js";
 constants.FEATURES_MINMAX_JS = constants.JS_OBJECTS+"/minMax.js";
 constants.FEATURES_MEAN_STD_JS=constants.JS_OBJECTS+"/meanStd.js";
+constants.DESCISION_BOUNDARY_PLOT = constants.DATASET_DIR+"/decision_boundary_plot.png";
+
 if(typeof module!=='undefined'){
    module.exports=constants;
 }
