@@ -21,6 +21,7 @@
     <script  src = "../common/utils.js"></script>
     <script  src = "../common/draw.js"></script>
     <script  src = "../common/featureFunctions.js"></script>
+    <script src = "../common/classifiers/knn.js"></script> 
 
     <script  src = "../common/js_objects/features.js"></script>
     <script  src = "../common/js_objects/testing.js"></script>
@@ -38,13 +39,14 @@
         const{samples,featureNames}= features;
         const trainingSamples = training.samples;
         const testingSamples = testing.samples;
-
+        const k = 50;
+        const kNN = new KNN(trainingSamples, k);
         let correctCount = 0;
         let totalCount = 0;
         for(const testSample of testingSamples){
             testSample.truth = testSample.label;
             testSample.label="?";
-            const {label} = classify(testSample.point);
+            const {label} = kNN.predict(testSample.point);
             testSample.label = label;
             testSample.correct = testSample.label ==testSample.truth;
 
@@ -101,7 +103,7 @@
             point = featureFns.map(fn => fn(paths));
             
             utils.normalizePoints([point],featuresMinMax);
-            const {label, probability,nearestSamples}= classify(point);
+            const {label, probability,nearestSamples}= kNN.predict(point);
             // console.log(label);       
             
             predictedLabelContainer.innerHTML = "Is is a "+ label +"?" +  utils.formatPercent(probability);
@@ -109,7 +111,8 @@
         }
 
 
-        function classify(point, k =10){
+        /*
+        function classify(point, k){
             
             const samplePoints = trainingSamples.map(s=>s.point);
             const indices = utils.getNearest (point,samplePoints, k);
@@ -128,6 +131,8 @@
 
             return {label, probability, nearestSamples};
         }
+
+        */
     </script>
 
 </body>
