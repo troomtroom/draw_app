@@ -18,6 +18,7 @@ constants.TESTING_JS=constants.JS_OBJECTS+"/testing.js";
 constants.FEATURES_MINMAX_JS = constants.JS_OBJECTS+"/minMax.js";
 constants.FEATURES_MEAN_STD_JS=constants.JS_OBJECTS+"/meanStd.js";
 constants.DESCISION_BOUNDARY_PLOT = constants.DATASET_DIR+"/decision_boundary_plot.png";
+constants.K_TUNING_CSV = constants.DATASET_DIR+"/k_tuning.csv";
 
 if(typeof module!=='undefined'){
    module.exports=constants;
