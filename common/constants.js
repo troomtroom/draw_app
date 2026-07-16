@@ -9,6 +9,7 @@ constants.SAMPLES=constants.DATASET_DIR+"/samples.json";
 constants.FEATURES=constants.DATASET_DIR+"/features.json";
 constants.TRAINING=constants.DATASET_DIR+"/training.json";
 constants.TESTING=constants.DATASET_DIR+"/testing.json";
+constants.K_CONFIG=constants.DATASET_DIR+"/k_config.json";
 
 constants.JS_OBJECTS="../common/js_objects";
 constants.SAMPLES_JS=constants.JS_OBJECTS+"/samples.js";
