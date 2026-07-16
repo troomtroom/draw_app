@@ -12,7 +12,7 @@ constants.TRAINING_CSV=constants.DATASET_DIR+"/training.csv";
 constants.TESTING=constants.DATASET_DIR+"/testing.json";
 constants.TESTING_CSV=constants.DATASET_DIR+"/testing.csv";
 constants.K_CONFIG=constants.DATASET_DIR+"/k_config.json";
-
+constants.K_CONFIG_JS=constants.DATASET_DIR+"/k_config.js";
 constants.JS_OBJECTS="../common/js_objects";
 constants.SAMPLES_JS=constants.JS_OBJECTS+"/samples.js";
 constants.FEATURES_JS=constants.JS_OBJECTS+"/features.js";

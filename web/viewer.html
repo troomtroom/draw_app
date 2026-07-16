@@ -35,11 +35,15 @@
     <script src="./chart/chart.js"></script>
     <script src="./chart/graphics.js"></script>
     <script src="./chart/math.js"></script>
+    <script src="../data/dataset/k_config.js"></script>
     <script>
         const{samples,featureNames}= features;
         const trainingSamples = training.samples;
         const testingSamples = testing.samples;
-        const k = 50;
+        // const k = constants.K_CONFIG.bestK;
+        // const k = 50;
+        const k = typeof bestKConfig !== 'undefined' ? bestKConfig.bestK : 50;
+        console.log("Browser is using K =", k);
         const kNN = new KNN(trainingSamples, k);
         let correctCount = 0;
         let totalCount = 0;

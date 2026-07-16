@@ -63,4 +63,7 @@ console.log(`\n Verified Winner! Best K found: ${bestK} with a Cross-Validation 
 // Save the truly optimal K value
 const configData = { bestK: bestK };
 fs.writeFileSync(constants.K_CONFIG, JSON.stringify(configData, null, 2));
+const jsContent = `const bestKConfig = ${JSON.stringify({ bestK: bestK }, null, 2)};`;
+
+fs.writeFileSync(constants.K_CONFIG_JS, jsContent);
 console.log("Saved best K to config.json!");
