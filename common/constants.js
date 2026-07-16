@@ -8,7 +8,9 @@ constants.IMG_DIR=constants.DATASET_DIR+"/img";
 constants.SAMPLES=constants.DATASET_DIR+"/samples.json";
 constants.FEATURES=constants.DATASET_DIR+"/features.json";
 constants.TRAINING=constants.DATASET_DIR+"/training.json";
+constants.TRAINING_CSV=constants.DATASET_DIR+"/training.csv";
 constants.TESTING=constants.DATASET_DIR+"/testing.json";
+constants.TESTING_CSV=constants.DATASET_DIR+"/testing.csv";
 constants.K_CONFIG=constants.DATASET_DIR+"/k_config.json";
 
 constants.JS_OBJECTS="../common/js_objects";

@@ -191,6 +191,15 @@ utils.getWeightedProbability=(items, weights)=>{
     };
 }
 
+utils.toCSV = (headers, samples) => {
+    let str = headers.join(",") + "\n";
+    for (const sample of samples) {
+        str += sample.join(",") + "\n";
+    }
+    return str;
+}
+
+
 
 if(typeof module!=='undefined'){
     module.exports=utils;
